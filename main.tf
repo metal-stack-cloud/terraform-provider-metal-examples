@@ -8,7 +8,7 @@ terraform {
       source = "hashicorp/local"
     }
     metal = {
-      source = "metalstack.cloud/terraform/metal"
+      source = "metal-stack-cloud/metal"
     }
   }
 }
