@@ -1,14 +1,14 @@
 terraform {
   required_providers {
     metal = {
-      source = "metalstack.cloud/terraform/metal"
+      source = "metal-stack-cloud/metal"
     }
   }
 }
 
 resource "metal_cluster" "app_cluster" {
   name       = var.cluster_name
-  kubernetes = "1.26.9"
+  kubernetes = "1.27.8"
   workers = [
     {
       name            = "default"

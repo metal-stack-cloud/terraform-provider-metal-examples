@@ -14,6 +14,14 @@ terraform apply -target local_sensitive_file.kubeconfig # -auto-approve
 terraform apply # -auto-approve
 ```
 
+In case you want to destroy your cluster to free up resources, you need to perform it in two steps.
+Otherwirse terraform removes the kubeconfig before destroying the cluster resources:
+
+```bash
+terraform destroy -target module.metal-app
+terraform destroy
+```
+
 ## Extract using Output
 
 In case you only need the kubeconfig, you can also add an output for it:
