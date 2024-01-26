@@ -1,0 +1,45 @@
+name: Acceptance Tests
+
+on:
+  schedule:
+    - cron: '0 13 * * *'
+
+  pull_request: true
+
+# Testing only needs permissions to read the repository contents.
+permissions:
+  contents: read
+
+env:
+  METAL_STACK_CLOUD_API_TOKEN: ${{ secrets.METAL_STACK_CLOUD_API_TOKEN }}
+
+jobs:
+  metal:
+    name: Acceptance Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - uses: hashicorp/setup-terraform@v3
+      
+      - name: Create cluster and get kubeconfig
+        run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
+      - name: Deploy service into cluster
+        run: terraform apply -auto-approve
+
+        # TODO: eventually run some tests here in the future
+        # this would require to extract the domain and make a call to it
+        
+      - name: Destroy service
+        run: terraform destroy -target module.metal-app
+      - name: Destroy Cluster
+        run: terraform destroy
+
+      # - name: Send GitHub trigger payload to Slack Workflow Builder
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1.24.0
+      #   with:
+      #     channel-id: 'SLACK_CHANNEL_ID' # ID of Slack Channel you want to post to
+      #     payload: "{\"text\": \"Daily Integration Test failed!\"}"
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
