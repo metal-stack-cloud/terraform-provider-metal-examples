@@ -5,7 +5,7 @@ on:
     - cron: '0 13 * * *'
 
   pull_request:
-    types: [opened]
+    types: [opened, synchronized, reopened]
 
 # Testing only needs permissions to read the repository contents.
 permissions:
