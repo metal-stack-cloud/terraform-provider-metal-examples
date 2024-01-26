@@ -4,7 +4,8 @@ on:
   schedule:
     - cron: '0 13 * * *'
 
-  pull_request: true
+  pull_request:
+    types: [opened]
 
 # Testing only needs permissions to read the repository contents.
 permissions:
