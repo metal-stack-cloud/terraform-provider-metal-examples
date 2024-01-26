@@ -3,7 +3,7 @@ name: Acceptance Tests
 on:
   schedule:
     - cron: '0 13 * * *'
-
+  push: {}
   pull_request:
     types: [opened, synchronized, reopened]
 
