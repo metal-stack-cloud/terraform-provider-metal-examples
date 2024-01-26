@@ -15,7 +15,7 @@ terraform apply # -auto-approve
 ```
 
 In case you want to destroy your cluster to free up resources, you need to perform it in two steps.
-Otherwirse terraform removes the kubeconfig before destroying the cluster resources:
+Otherwise terraform removes the kubeconfig before destroying the cluster resources:
 
 ```bash
 terraform destroy -target module.metal-app
