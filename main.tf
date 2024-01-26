@@ -15,11 +15,6 @@ terraform {
 
 # PROVIDERS
 
-import {
-  to = module.metal-infra.metal_cluster.app_cluster
-  id = local.app_cluster_name
-}
-
 provider "metal" {
   # All arguments are optional and can be omitted
   # The defaults are derived from the environment variables METAL_STACK_CLOUD_* or ~/.metal-stack-cloud/config.yaml
