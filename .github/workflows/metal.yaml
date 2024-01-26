@@ -23,6 +23,9 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - uses: hashicorp/setup-terraform@v3
       
+      - name: Init project
+        run: terraform init
+        
       - name: Create cluster and get kubeconfig
         run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
       - name: Deploy service into cluster
@@ -32,9 +35,9 @@ jobs:
         # this would require to extract the domain and make a call to it
         
       - name: Destroy service
-        run: terraform destroy -target module.metal-app
+        run: terraform destroy -target module.metal-app --auto-approve
       - name: Destroy Cluster
-        run: terraform destroy
+        run: terraform destroy --auto-approve
 
       # - name: Send GitHub trigger payload to Slack Workflow Builder
       #   id: slack
