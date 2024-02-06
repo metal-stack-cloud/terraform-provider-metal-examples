@@ -39,11 +39,26 @@ jobs:
       - name: Destroy Cluster
         run: terraform destroy --auto-approve
 
-      # - name: Send GitHub trigger payload to Slack Workflow Builder
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1.24.0
-      #   with:
-      #     channel-id: 'SLACK_CHANNEL_ID' # ID of Slack Channel you want to post to
-      #     payload: "{\"text\": \"Daily Integration Test failed!\"}"
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Send GitHub trigger payload to Slack Workflow Builder
+        id: slack
+        uses: slackapi/slack-github-action@v1.25.0
+        # TODO: include before merge
+        # if: failure()
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "text": "Integration Test ${{ job.status }}!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Action: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
