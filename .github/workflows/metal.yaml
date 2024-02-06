@@ -26,36 +26,43 @@ jobs:
       - name: Init project
         run: terraform init
         
-      # - name: Create cluster and get kubeconfig
-      #   run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
-      # - name: Deploy service into cluster
-      #   run: terraform apply -auto-approve
+      - name: Create cluster and get kubeconfig
+        run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
+      - name: Deploy service into cluster
+        run: terraform apply -auto-approve
 
       #   # TODO: eventually run some tests here in the future
       #   # this would require to extract the domain and make a call to it
         
-      # - name: Destroy service
-      #   run: terraform destroy -target module.metal-app --auto-approve
-      # - name: Destroy Cluster
-      #   run: terraform destroy --auto-approve
+      - name: Destroy service
+        run: terraform destroy -target module.metal-app --auto-approve
+      - name: Destroy Cluster
+        run: terraform destroy --auto-approve
 
       - name: Post failure to Slack
         id: slack
         uses: slackapi/slack-github-action@v1.25.0
         # TODO: include before merge
-        # if: failure()
+        if: failure()
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: "\nAction: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           payload: |
                   {
-                    "text": "Integration Test: test cluster creation failed!",
+                    "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{GITHUB_SERVER_URL}}/${{GITHUB_REPOSITORY}}/actions/runs/${{GITHUB_RUN_ID}}.",
                     "blocks": [
                       {
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
-                          "text": "**Action:**  [${{ job.status }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+                          "text": "@here Integration Test: test cluster creation failed!"
+                        }
+                      },
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "*Action:*  ${{ job.status }} ${{GITHUB_SERVER_URL}}/${{GITHUB_REPOSITORY}}/actions/runs/${{GITHUB_RUN_ID}}."
                         }
                       }
                     ]
