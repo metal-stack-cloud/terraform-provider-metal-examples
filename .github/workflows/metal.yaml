@@ -39,7 +39,7 @@ jobs:
       # - name: Destroy Cluster
       #   run: terraform destroy --auto-approve
 
-      - name: Send GitHub trigger payload to Slack Workflow Builder
+      - name: Post failure to Slack
         id: slack
         uses: slackapi/slack-github-action@v1.25.0
         # TODO: include before merge
@@ -49,4 +49,3 @@ jobs:
           slack-message: "Integration Test ${{ job.status }}!\nAction: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
