@@ -19,10 +19,13 @@ resource "metal_cluster" "app_cluster" {
       max_unavailable = 1
     }
   ]
-  # maintenance = {
-  #   time_window = {
-  #     begin    = "01:00 AM"
-  #     duration = 2
-  #   }
-  # }
+  maintenance = {
+    time_window = {
+      begin = {
+        hour   = 18
+        minute = 30
+      }
+      duration = 2
+    }
+  }
 }
