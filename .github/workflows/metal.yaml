@@ -2,7 +2,7 @@ name: Acceptance Tests
 
 on:
   schedule:
-    - cron: '0 13 * * *'
+    - cron: "0 13 * * *"
   push: {}
   pull_request:
     types: [opened, synchronized, reopened]
@@ -22,10 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - uses: hashicorp/setup-terraform@v3
-      
+
       - name: Init project
         run: terraform init
-        
+
       - name: Create cluster and get kubeconfig
         run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
       - name: Deploy service into cluster
@@ -33,10 +33,11 @@ jobs:
 
       #   # TODO: eventually run some tests here in the future
       #   # this would require to extract the domain and make a call to it
-        
+
       - name: Destroy service
         run: terraform destroy -target module.metal-app --auto-approve
       - name: Destroy Cluster
+        if: always()
         run: terraform destroy --auto-approve
 
       - name: Post failure to Slack
@@ -47,26 +48,25 @@ jobs:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: "\nAction: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           payload: |
-                  {
-                    "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITORY}}/actions/runs/${{env.GITHUB_RUN_ID}}.",
-                    "blocks": [
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "@here Integration Test: test cluster creation failed!"
-                        }
-                      },
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "*Action:*  ${{ job.status }} ${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITORY}}/actions/runs/${{env.GITHUB_RUN_ID}}."
-                        }
-                      }
-                    ]
+            {
+              "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITORY}}/actions/runs/${{env.GITHUB_RUN_ID}}.",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "@here Integration Test: test cluster creation failed!"
                   }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Action:*  ${{ job.status }} ${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITORY}}/actions/runs/${{env.GITHUB_RUN_ID}}."
+                  }
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
