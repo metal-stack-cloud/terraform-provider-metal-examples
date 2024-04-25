@@ -33,7 +33,7 @@ module "metal-infra" {
 }
 
 module "metal-app" {
-  depends_on      = [module.metal-infra]
+  depends_on      = [module.metal-infra, local_sensitive_file.kubeconfig]
   source          = "./metal-app"
   kubeconfig_path = local.kubeconfig_path
 }
