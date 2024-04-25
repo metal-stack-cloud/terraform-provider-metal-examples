@@ -46,7 +46,7 @@ jobs:
         if: failure()
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: "\nAction: ${{ env.GITHUB_SERVER_URL }}/${{ env-GITHUB_REPOSITORY }}/actions/runs/${{ env.$GITHUB_RUN_ID }}"
+          slack-message: "\nAction: ${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/actions/runs/${{ env.$GITHUB_RUN_ID }}"
           payload: |
             {
               "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITORY}}/actions/runs/${{env.GITHUB_RUN_ID}}.",
