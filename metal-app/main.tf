@@ -8,6 +8,7 @@ terraform {
 }
 
 resource "kubernetes_deployment" "nginx" {
+  provider = kubernetes.k8s
   metadata {
     name = "demo"
     labels = {
@@ -40,6 +41,7 @@ resource "kubernetes_deployment" "nginx" {
 }
 
 resource "kubernetes_service" "nginx-ingress" {
+  provider = kubernetes.k8s
   metadata {
     name = "nginx-ingress"
   }
