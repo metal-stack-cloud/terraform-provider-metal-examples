@@ -19,11 +19,15 @@ provider "metal" {
   # All arguments are optional and can be omitted
   # The defaults are derived from the environment variables METAL_STACK_CLOUD_* or ~/.metal-stack-cloud/config.yaml
 }
+
 provider "kubernetes" {
   # requires: resource.local_sensitive_file.kubeconfig
   # $ terraform apply -target local_sensitive_file.kubeconfig
-  config_path = local.kubeconfig_path
+  alias       = "k8s"
+  config_path = local_sensitive_file.kubeconfig.filename
 }
+
+provider "local" {}
 
 # MODULES
 
@@ -36,6 +40,9 @@ module "metal-app" {
   depends_on      = [module.metal-infra, local_sensitive_file.kubeconfig]
   source          = "./metal-app"
   kubeconfig_path = local.kubeconfig_path
+  providers = {
+    kubernetes = kubernetes.k8s
+  }
 }
 
 # LOCALS
