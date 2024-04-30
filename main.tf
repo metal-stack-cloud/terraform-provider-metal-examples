@@ -23,8 +23,11 @@ provider "metal" {
 provider "kubernetes" {
   # requires: resource.local_sensitive_file.kubeconfig
   # $ terraform apply -target local_sensitive_file.kubeconfig
+  alias       = "k8s"
   config_path = local.kubeconfig_path
 }
+
+provider "local" {}
 
 # MODULES
 
@@ -37,6 +40,9 @@ module "metal-app" {
   depends_on      = [module.metal-infra, local_sensitive_file.kubeconfig]
   source          = "./metal-app"
   kubeconfig_path = local.kubeconfig_path
+  providers = {
+    kubernetes = kubernetes.k8s
+  }
 }
 
 # LOCALS

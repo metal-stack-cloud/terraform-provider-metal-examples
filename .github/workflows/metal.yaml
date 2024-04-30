@@ -29,7 +29,7 @@ jobs:
       - name: Create cluster and get kubeconfig
         run: terraform apply -target local_sensitive_file.kubeconfig --auto-approve
       - name: Deploy service into cluster
-        run: terraform apply -auto-approve
+        run: terraform apply --auto-approve
 
       #   # TODO: eventually run some tests here in the future
       #   # this would require to extract the domain and make a call to it
