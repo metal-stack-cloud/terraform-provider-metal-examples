@@ -2,13 +2,12 @@ terraform {
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.0.3"
+      version = ">= 2.23.0"
     }
   }
 }
 
 resource "kubernetes_deployment" "nginx" {
-  provider = kubernetes.k8s
   metadata {
     name = "demo"
     labels = {
@@ -41,7 +40,6 @@ resource "kubernetes_deployment" "nginx" {
 }
 
 resource "kubernetes_service" "nginx-ingress" {
-  provider = kubernetes.k8s
   metadata {
     name = "nginx-ingress"
   }
