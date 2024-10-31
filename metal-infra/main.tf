@@ -8,7 +8,7 @@ terraform {
 
 resource "metal_cluster" "app_cluster" {
   name       = var.cluster_name
-  kubernetes = "1.28.10"
+  kubernetes = "1.30.6"
   workers = [
     {
       name            = "default"
