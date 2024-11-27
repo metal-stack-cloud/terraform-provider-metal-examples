@@ -46,10 +46,10 @@ jobs:
         if: failure()
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: "\nAction: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}"
+          slack-message: "\nAction: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.job }}"
           payload: |
             {
-              "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}.",
+              "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.job }}.",
               "blocks": [
                 {
                   "type": "section",
@@ -62,7 +62,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Action:*  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}."
+                    "text": "*Action:*  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.job }}."
                   }
                 }
               ]
