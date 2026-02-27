@@ -2,12 +2,12 @@ terraform {
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.23.0"
+      version = ">= 3.0.0"
     }
   }
 }
 
-resource "kubernetes_deployment" "nginx" {
+resource "kubernetes_deployment_v1" "nginx" {
   metadata {
     name = "demo"
     labels = {
@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "nginx" {
 
 }
 
-resource "kubernetes_service" "nginx-ingress" {
+resource "kubernetes_service_v1" "nginx-ingress" {
   metadata {
     name = "nginx-ingress"
   }
@@ -47,7 +47,7 @@ resource "kubernetes_service" "nginx-ingress" {
     type = "LoadBalancer"
 
     selector = {
-      app = resource.kubernetes_deployment.nginx.metadata.0.labels.app
+      app = resource.kubernetes_deployment_v1.nginx.metadata.0.labels.app
     }
     port {
       port        = 8080

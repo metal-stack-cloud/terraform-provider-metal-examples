@@ -38,7 +38,7 @@ jobs:
         run: terraform destroy -target module.metal-app --auto-approve
       - name: Destroy Cluster
         if: always()
-        run: terraform destroy --auto-approve
+        run: terraform destroy --auto-approve -lock=false
 
       - name: Post failure to Slack
         id: slack
