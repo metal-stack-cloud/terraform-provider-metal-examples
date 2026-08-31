@@ -5,7 +5,7 @@ on:
     - cron: "0 13 * * *"
   push: {}
   pull_request:
-    types: [opened, synchronized, reopened]
+    types: [opened, synchronize, reopened]
 
 # Testing only needs permissions to read the repository contents.
 permissions:
@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - uses: hashicorp/setup-terraform@v3
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
 
       - name: Init project
         run: terraform init
@@ -41,32 +41,20 @@ jobs:
         run: terraform destroy --auto-approve -lock=false
 
       - name: Post failure to Slack
-        id: slack
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v4.0.0
         if: failure()
         with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: "\nAction: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload: |
-            {
-              "text": "@here Integration Test: test cluster creation failed!\nAction:  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}.",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "@here Integration Test: test cluster creation failed!"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Action:*  ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: "@here Integration Test: test cluster creation failed!\nAction: ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "@here Integration Test: test cluster creation failed!"
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Action:* ${{ job.status }} ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
