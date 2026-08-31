@@ -39,9 +39,9 @@ resource "kubernetes_deployment_v1" "nginx" {
 
 }
 
-resource "kubernetes_service_v1" "nginx-ingress" {
+resource "kubernetes_service_v1" "demo_lb" {
   metadata {
-    name = "nginx-ingress"
+    name = "demo-lb"
   }
   spec {
     type = "LoadBalancer"
